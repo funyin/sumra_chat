@@ -14,6 +14,90 @@ class ProfileScreen extends StatelessWidget {
     profileActionItem(Assets.vectorsIcUser, "Profile", () {}),
     profileActionItem(Assets.vectorsIcBell, "Mute", () {})
   ];
+  late var topLevelActions = <String, Widget>{
+    "Color": Container(
+      height: 24,
+      width: 24,
+      decoration:
+          const BoxDecoration(color: AppColors.blue, shape: BoxShape.circle),
+      alignment: Alignment.center,
+      child: Container(
+        height: 8,
+        width: 8,
+        decoration:
+            const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+      ),
+    ),
+    "Emoji": SvgPicture.asset(
+      Assets.vectorsIcThumbUp,
+      color: AppColors.blue,
+      height: 22.03,
+    ),
+    "Nicknames": SvgPicture.asset(
+      Assets.vectorsIcArrowRight,
+      height: 13,
+      color: Colors.black.withOpacity(0.2),
+    )
+  };
+
+  late var moreActions = <String, Widget>{
+    "Search in Conversation": Container(
+      height: 32,
+      width: 32,
+      decoration:
+          const BoxDecoration(color: AppColors.grey1, shape: BoxShape.circle),
+      alignment: Alignment.center,
+      child: SvgPicture.asset(
+        Assets.vectorsIcSearch,
+        height: 14,
+        color: AppColors.iconColorActive,
+      ),
+    ),
+    "Create Group": Container(
+      height: 32,
+      width: 32,
+      decoration:
+          const BoxDecoration(color: AppColors.grey1, shape: BoxShape.circle),
+      alignment: Alignment.center,
+      child: SvgPicture.asset(
+        Assets.vectorsIcGroup,
+        height: 13,
+        color: AppColors.iconColorActive,
+      ),
+    )
+  };
+
+  late var privacyActions = <String, Widget>{
+    "Notifications": Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          "On",
+          style: TextStyle(color: Colors.black.withOpacity(0.35), fontSize: 17),
+        ),
+        SizedBox(width: 6),
+        SvgPicture.asset(
+          Assets.vectorsIcArrowRight,
+          height: 13,
+          color: Colors.black.withOpacity(0.2),
+        )
+      ],
+    ),
+    "Ignore Messages": Container(
+      height: 32,
+      width: 32,
+      decoration:
+          const BoxDecoration(color: AppColors.grey1, shape: BoxShape.circle),
+      alignment: Alignment.center,
+      child: SvgPicture.asset(
+        Assets.vectorsHide,
+        height: 15,
+        color: AppColors.iconColorActive,
+      ),
+    ),
+    "Block": const SizedBox()
+  };
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,9 +107,10 @@ class ProfileScreen extends StatelessWidget {
         Container(
           height: 259 + MediaQuery.of(context).padding.top,
           padding: const EdgeInsets.symmetric(horizontal: 16).copyWith(top: 8),
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
               image: DecorationImage(
-                  image: AssetImage(Assets.imagesProfileBackground))),
+                  image: AssetImage(Assets.imagesProfileBackground),
+                  fit: BoxFit.cover)),
           child: SafeArea(
             child: Stack(
               alignment: Alignment.center,
@@ -38,14 +123,14 @@ class ProfileScreen extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    UserDp(size: 100),
-                    SizedBox(height: 8),
+                    const UserDp(size: 100),
+                    const SizedBox(height: 8),
                     Padding(
                       padding: const EdgeInsets.only(top: 8.0, bottom: 24),
                       child: Text(
                         faker.person.name(),
                         maxLines: 1,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontWeight: FontWeight.w700, fontSize: 24),
                       ),
                     ),
@@ -55,10 +140,11 @@ class ProfileScreen extends StatelessWidget {
                           primary: false,
                           shrinkWrap: true,
                           scrollDirection: Axis.horizontal,
-                          physics: NeverScrollableScrollPhysics(),
+                          physics: const NeverScrollableScrollPhysics(),
                           itemBuilder: (context, index) =>
                               profileActionItems[index],
-                          separatorBuilder: (_, __) => SizedBox(width: 26),
+                          separatorBuilder: (_, __) =>
+                              const SizedBox(width: 26),
                           itemCount: 4),
                     )
                   ],
@@ -77,9 +163,58 @@ class ProfileScreen extends StatelessWidget {
             ),
           ),
         ),
-        Container(),
+        Expanded(
+            child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      buildSectionItems(topLevelActions),
+                      buildSectionTitle("More actions"),
+                      buildSectionItems(moreActions),
+                      buildSectionTitle("Privacy"),
+                      buildSectionItems(privacyActions),
+                    ]))),
       ],
     ));
+  }
+
+  ListView buildSectionItems(Map<String, Widget> items) {
+    return ListView.separated(
+        physics: const NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        primary: false,
+        padding: EdgeInsets.zero,
+        itemBuilder: (context, index) {
+          var item = items.entries.elementAt(index);
+          return SizedBox(
+              height: 52,
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      item.key,
+                      style: const TextStyle(fontSize: 17),
+                    ),
+                    item.value
+                  ]));
+        },
+        separatorBuilder: (_, __) => const Divider(),
+        itemCount: items.length);
+  }
+
+  Widget buildSectionTitle(String title) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8, top: 16),
+      child: Text(
+        title.toUpperCase(),
+        style: TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 13,
+            color: Colors.black.withOpacity(0.35)),
+      ),
+    );
   }
 
   profileActionItem(
@@ -95,10 +230,10 @@ class ProfileScreen extends StatelessWidget {
           width: 40,
           height: 40,
           alignment: Alignment.center,
-          margin: EdgeInsets.only(bottom: 6),
+          margin: const EdgeInsets.only(bottom: 6),
           child: SvgPicture.asset(icon),
-          decoration:
-              BoxDecoration(color: AppColors.grey1, shape: BoxShape.circle),
+          decoration: const BoxDecoration(
+              color: AppColors.grey1, shape: BoxShape.circle),
         ),
         Text(
           title,
