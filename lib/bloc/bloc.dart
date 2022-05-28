@@ -9,7 +9,7 @@ class WhatsAppCloneCubit extends Cubit<WhatsAppCloneState> {
     MockServer.participantStatusController.stream.listen(_listenToServer);
   }
 
-  void _listenToServer(Map<String, MessageSender> event) {
+  void _listenToServer(Map<String, UserModel> event) {
     var newState = state;
     var respondent = event.values.first;
     // newState.randomChats!
@@ -18,7 +18,7 @@ class WhatsAppCloneCubit extends Cubit<WhatsAppCloneState> {
         .firstWhere((element) => element.chatId == event.keys.first)
         .chatData
         .participants
-        .firstWhere((element) => element.mobile == respondent.mobile)
+        .firstWhere((element) => element.id == respondent.id)
         .status = respondent.status;
     emit(newState);
   }
@@ -70,7 +70,7 @@ class WhatsAppCloneCubit extends Cubit<WhatsAppCloneState> {
         .toList();
   }
 
-  MessageSender respondent() => selectedChat().chatData.participants[1];
+  UserModel respondent() => selectedChat().chatData.participants[1];
 
   ChatModel selectedChat() => state.randomChats!
       .firstWhere((element) => element.chatId == state.selectedChatId);

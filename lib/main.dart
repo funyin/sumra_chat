@@ -19,7 +19,7 @@ class Sumra extends StatelessWidget {
       color: AppColors.primary,
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
-      themeMode: ThemeMode.dark,
+      themeMode: ThemeMode.light,
       onGenerateRoute: appRouter.onGenerateRoute,
       initialRoute: AppRouter.initialRoute(),
     );

@@ -6,20 +6,24 @@ import 'package:sumra_chat/core/constants/app_strings.dart';
 class AppTheme {
   AppTheme._();
 
-  static final light = ThemeData();
+  static final light = ThemeData(
+      fontFamily: AppStrings.SFProDisplay,
+      textTheme: textTheme(),
+      iconTheme: IconThemeData(color: AppColors.iconColorActive),
+      dividerTheme: DividerThemeData(
+          color: Colors.black.withOpacity(0.12), thickness: 0.5),
+      textSelectionTheme: const TextSelectionThemeData(
+          cursorColor: AppColors.textColor,
+          selectionHandleColor: AppColors.textColor),
+      scaffoldBackgroundColor: AppColors.backgroundColor);
+
   static final dark = ThemeData(
       brightness: Brightness.dark,
       fontFamily: AppStrings.SFProDisplay,
-      appBarTheme: AppBarTheme(
-        centerTitle: true,
-        backgroundColor: AppColors.primaryLight,
-        titleTextStyle: TextStyle(),
-      ),
-      // colorScheme: ColorScheme.dark(),
       primaryColor: AppColors.purple,
       accentColor: AppColors.purple,
-      bottomSheetTheme: BottomSheetThemeData(
-          backgroundColor: AppColors.primary,
-          modalBackgroundColor: AppColors.primary),
       scaffoldBackgroundColor: AppColors.primary);
+
+  static TextTheme textTheme() =>
+      const TextTheme(bodyText1: TextStyle(color: AppColors.textColor));
 }

@@ -26,7 +26,7 @@ class ChatBubble extends StatefulWidget {
 class _ChatBubbleState extends State<ChatBubble> {
   final hovering = ValueNotifier(false);
 
-  late MessageSender messageSender = widget.message.sender!;
+  late UserModel messageSender = widget.message.sender!;
 
   late bool iSent = messageSender == MockServer.signedInUser;
 
@@ -119,18 +119,9 @@ class _ChatBubbleState extends State<ChatBubble> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 4),
       child: Row(mainAxisSize: MainAxisSize.min, children: [
-        if (!messageSender.savedContact!)
-          Padding(
-            padding: const EdgeInsets.only(right: 8.0),
-            child: Text(
-              "${messageSender.mobile}",
-              style: headerStyle.copyWith(color: messageSender.color),
-            ),
-          ),
         Text(
-          (!messageSender.savedContact! ? "~ " : "") + messageSender.name,
-          style: headerStyle.copyWith(
-              color: messageSender.savedContact! ? messageSender.color : null),
+          messageSender.name,
+          style: headerStyle.copyWith(color: null),
         ),
       ]),
     );
@@ -155,9 +146,9 @@ class _ChatBubbleState extends State<ChatBubble> {
             child: Container(
               decoration: BoxDecoration(
                   gradient: LinearGradient(colors: [
-                (iSent ? AppColors.senderColor : Colors.white).withOpacity(0.4),
-                (iSent ? AppColors.senderColor : Colors.white),
-                (iSent ? AppColors.senderColor : Colors.white),
+                (iSent ? AppColors.green : Colors.white).withOpacity(0.4),
+                (iSent ? AppColors.green : Colors.white),
+                (iSent ? AppColors.green : Colors.white),
               ], begin: Alignment.centerLeft, end: Alignment.centerRight)),
               child: const Icon(
                 Icons.keyboard_arrow_down_rounded,

@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:flutter/material.dart';
 import 'package:sumra_chat/core/constants/app_gloabl_elements.dart';
 import 'package:sumra_chat/models/item_chat_model.dart';
 
@@ -12,7 +11,9 @@ class MockServer {
       var isPrivate = chatType == ChatType.private;
       var participants = List.generate(
           isPrivate ? 2 : (Random().nextInt(10) + 2),
-          (index) => isPrivate && index == 0 ? signedInUser : _randomUser);
+          (index) => isPrivate && index == 0
+              ? signedInUser
+              : randomUsers[Random().nextInt(randomUsers.length - 1)]);
       var randomMessages = _randomMessages(participants);
       return ChatModel(
           chatData: ChatData(
@@ -39,8 +40,7 @@ class MockServer {
     return list.reversed.toList();
   }
 
-  static List<ChatMessageModel> _randomMessages(
-      List<MessageSender> participants) {
+  static List<ChatMessageModel> _randomMessages(List<UserModel> participants) {
     return List.generate(Random().nextInt(19) + 1, (index) {
       var dateTime = DateTime.now();
       var month = Random().nextInt(dateTime.month) + 1;
@@ -71,14 +71,8 @@ class MockServer {
     });
   }
 
-  static String get _mobileNumber => faker.phoneNumber.random.fromPattern([
-        '080########',
-        '090########',
-        '081########',
-        '070########',
-      ]);
-
-  static MessageSender get _randomUser => MessageSender(
+  static UserModel _randomUser(int id) => UserModel(
+      id: id,
       imageUrl: Random().nextBool()
           ? faker.image.image(
               width: 200,
@@ -86,28 +80,15 @@ class MockServer {
               keywords: ["person", "woman", "man", "boy", ",girl"],
               random: true)
           : null,
-      about: faker.lorem.sentence(),
-      mobile: _mobileNumber,
       status: MessageSenderStatus.offline,
-      savedContact: Random().nextBool(),
-      color: _userColors[Random().nextInt(_userColors.length - 1)],
       name: faker.person.name());
 
-  static var _userColors = <Color>[
-    Colors.green,
-    Colors.deepOrange,
-    Colors.brown,
-    Colors.purple,
-    Colors.blue,
-    Colors.cyanAccent
-  ];
+  static List<UserModel> randomUsers =
+      List.generate(30, (index) => _randomUser(index + 1));
 
-  static MessageSender signedInUser = MessageSender(
+  static UserModel signedInUser = UserModel(
+      id: 0,
       imageUrl: "https://avatars.githubusercontent.com/u/38915569?v=4",
-      savedContact: true,
-      about: "Hey there, I'm a developer",
-      mobile: "07035892924",
-      color: _userColors[1],
       status: MessageSenderStatus.online,
       name: "Funyinoluwa Kashimawo");
 
@@ -136,6 +117,6 @@ class MockServer {
           message: faker.lorem.sentences(Random().nextBool() ? 1 : 2).join());
   }
 
-  static StreamController<Map<String, MessageSender>>
+  static StreamController<Map<String, UserModel>>
       get participantStatusController => StreamController();
 }

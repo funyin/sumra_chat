@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class ChatModel {
   final List<ChatMessageModel> messages;
   final ChatType chatType;
@@ -18,7 +16,7 @@ class ChatModel {
 }
 
 class ChatMessageModel {
-  final MessageSender? sender;
+  final UserModel? sender;
   final String message;
   final ChatMessageType messageType;
   final DateTime date;
@@ -32,26 +30,20 @@ class ChatMessageModel {
   String get id => message + date.toIso8601String();
 }
 
-class MessageSender {
+class UserModel {
+  final int id;
   final String name;
-  final String? mobile;
-  final String? about;
   final String? imageUrl;
-  final Color? color;
-  final bool? savedContact;
   MessageSenderStatus status;
 
-  MessageSender(
-      {this.name = "No name",
-      this.mobile,
+  UserModel(
+      {required this.id,
+      this.name = "No name",
       this.imageUrl,
-      this.about,
-      this.color,
-      this.savedContact,
       this.status = MessageSenderStatus.offline});
 }
 
-enum MessageSenderStatus { offline, online, typing, recording }
+enum MessageSenderStatus { offline, online, typing }
 
 enum ChatType { public, private }
 
@@ -59,10 +51,10 @@ class ChatData {
   final String topic;
   final String description;
   final String? imageURl;
-  final List<MessageSender>? admins;
+  final List<UserModel>? admins;
 
   ///for private chats the respondent is the first element while the signed in user is the second
-  final List<MessageSender> participants;
+  final List<UserModel> participants;
   final DateTime created;
   final noGroupDpSvg =
       "https://firebasestorage.googleapis.com/v0/b/funyinkash-portfolio.appspot.com/o/portfolio%2FwhatsAppClone%2Fimages%2FnoGroupDpSvg.svg?alt=media&token=265c0ff0-4a77-4f3c-8884-82adfafd7226";

@@ -4,14 +4,16 @@ class Assets {
 
   static const String imagesLauncherIcon = 'assets/images/launcher_icon.png';
   static const String imagesLogo = 'assets/images/logo.png';
+  static const String imagesProfileBackground =
+      'assets/images/profile_background.png';
   static const String imagesTransparentPlaceholder =
       'assets/images/transparent_placeholder.png';
-  static const String vectorsBell = 'assets/vectors/bell.svg';
   static const String vectorsGame = 'assets/vectors/game.svg';
   static const String vectorsGif = 'assets/vectors/gif.svg';
   static const String vectorsHide = 'assets/vectors/hide.svg';
   static const String vectorsIcActions = 'assets/vectors/ic_actions.svg';
   static const String vectorsIcArrowRight = 'assets/vectors/ic_arrow_right.svg';
+  static const String vectorsIcBack = 'assets/vectors/ic_back.svg';
   static const String vectorsIcBell = 'assets/vectors/ic_bell.svg';
   static const String vectorsIcCamera = 'assets/vectors/ic_camera.svg';
   static const String vectorsIcChat = 'assets/vectors/ic_chat.svg';

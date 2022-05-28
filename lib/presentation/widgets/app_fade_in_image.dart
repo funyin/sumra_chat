@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:sumra_chat/generated/assets.dart';
 
@@ -16,14 +17,15 @@ class AppFadeInImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FadeInImage.assetNetwork(
-      image: url,
+    return FadeInImage(
+      image: CachedNetworkImageProvider(url),
       fit: fit,
       height: size,
       width: size,
       /*imageErrorBuilder: (context, error, stackTrace) =>
           Image.asset(Assets.imagesTransparentPlaceholder),*/
-      placeholder: placeHolder ?? Assets.imagesTransparentPlaceholder,
+      placeholder:
+          AssetImage(placeHolder ?? Assets.imagesTransparentPlaceholder),
       placeholderErrorBuilder: (context, error, stackTrace) => Container(),
     );
   }
