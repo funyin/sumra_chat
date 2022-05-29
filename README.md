@@ -1,6 +1,6 @@
 # sumra_chat
 
-A new Flutter project.
+A new Flutter project for all.
 
 ## Getting Started
 
