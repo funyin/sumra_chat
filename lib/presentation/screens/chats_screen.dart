@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:sumra_chat/bloc/bloc.dart';
+import 'package:sumra_chat/bloc/state.dart';
 import 'package:sumra_chat/core/constants/app_colors.dart';
-import 'package:sumra_chat/core/constants/app_gloabl_elements.dart';
 import 'package:sumra_chat/generated/assets.dart';
+import 'package:sumra_chat/models/item_chat_model.dart';
+import 'package:sumra_chat/presentation/widgets/list_items/chat_item.dart';
 import 'package:sumra_chat/presentation/widgets/user_dp.dart';
 
 class ChatsScreen extends StatefulWidget {
@@ -23,7 +27,7 @@ class _ChatsScreenState extends State<ChatsScreen> {
             children: [
               Container(
                 alignment: Alignment.center,
-                padding: EdgeInsets.symmetric(vertical: 16)
+                padding: const EdgeInsets.symmetric(vertical: 16)
                     .copyWith(left: 16, right: 8),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -32,87 +36,55 @@ class _ChatsScreenState extends State<ChatsScreen> {
                       height: 52,
                       width: 52,
                       alignment: Alignment.center,
-                      margin: EdgeInsets.only(bottom: 6),
-                      decoration: BoxDecoration(
+                      margin: const EdgeInsets.only(bottom: 6),
+                      decoration: const BoxDecoration(
                           color: AppColors.grey1, shape: BoxShape.circle),
                       child: SvgPicture.asset(Assets.vectorsIcPlus,
                           width: 20,
                           height: 20,
                           color: AppColors.iconColorActive),
                     ),
-                    Text("Your Story",
+                    const Text("Your Story",
                         style: TextStyle(color: AppColors.grey4, fontSize: 13)),
                   ],
                 ),
               ),
               Expanded(
-                child: ListView.separated(
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (context, index) {
-                      return const RecentUser(size: 52);
-                    },
-                    padding: const EdgeInsets.all(16),
-                    separatorBuilder: (_, index) =>
-                        SizedBox(width: index == 0 ? 8 : 16),
-                    itemCount: 12),
+                child: BlocBuilder<ChatsCubit, ChatsState>(
+                  builder: (context, state) {
+                    var usersWithStories = state.respondents
+                        .where((element) => element.hasStory)
+                        .toList();
+                    return ListView.separated(
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, index) {
+                          return RecentUser(
+                            size: 52,
+                            user: usersWithStories[index],
+                          );
+                        },
+                        padding: const EdgeInsets.all(16),
+                        separatorBuilder: (_, index) =>
+                            SizedBox(width: index == 0 ? 8 : 16),
+                        itemCount: usersWithStories.length);
+                  },
+                ),
               )
             ],
           ),
         ),
         Expanded(
-          child: ListView.builder(
-            itemBuilder: (context, index) {
-              var textStyle = TextStyle(color: AppColors.grey4);
-              return Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    UserDp(size: 60),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 12, right: 16),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              faker.person.name(),
-                              maxLines: 1,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w500, fontSize: 17),
-                            ),
-                            SizedBox(height: 2),
-                            Row(
-                              children: [
-                                Text(
-                                  "You : What's man!",
-                                  maxLines: 2,
-                                  style: textStyle,
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 4),
-                                  child: Text("•",
-                                      style: textStyle.copyWith(fontSize: 6)),
-                                ),
-                                Text(
-                                  "9:04 AM",
-                                  style: textStyle,
-                                )
-                              ],
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                    SvgPicture.asset(
-                      Assets.vectorsIcCheckTrue,
-                      width: 16,
-                      height: 16,
-                    )
-                  ],
-                ),
+          child: BlocBuilder<ChatsCubit, ChatsState>(
+            builder: (context, state) {
+              var recentChats = state.recentChats;
+              recentChats.sort(
+                (a, b) => b.messages.last.time.compareTo(a.messages.last.time),
+              );
+              return ListView.builder(
+                itemBuilder: (context, index) {
+                  return ChatItem(chat: recentChats[index]);
+                },
+                itemCount: recentChats.length,
               );
             },
           ),
@@ -123,18 +95,19 @@ class _ChatsScreenState extends State<ChatsScreen> {
 }
 
 class RecentUser extends StatelessWidget {
-  const RecentUser({Key? key, required this.size}) : super(key: key);
+  const RecentUser({Key? key, required this.size, required this.user})
+      : super(key: key);
   final double size;
-
+  final UserModel user;
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        UserDp(size: size, active: true),
-        SizedBox(height: 6),
+        UserDp(size: size, user: user),
+        const SizedBox(height: 6),
         Text(
-          faker.person.firstName(),
-          style: TextStyle(color: AppColors.grey4, fontSize: 13),
+          user.name.trim().split(" ").first,
+          style: const TextStyle(color: AppColors.grey4, fontSize: 13),
         )
       ],
     );

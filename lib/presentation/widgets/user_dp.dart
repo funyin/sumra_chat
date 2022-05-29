@@ -1,23 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:sumra_chat/core/constants/app_colors.dart';
 import 'package:sumra_chat/core/constants/app_gloabl_elements.dart';
+import 'package:sumra_chat/models/item_chat_model.dart';
 import 'package:sumra_chat/presentation/widgets/app_fade_in_image.dart';
 
 class UserDp extends StatelessWidget {
-  const UserDp({
+  final UserModel user;
+
+  UserDp({
     Key? key,
     required this.size,
-    this.useFaker = true,
-    this.imageUrl,
-    this.active = false,
-    this.activeAWhileAgo = false,
-  })  : assert(useFaker != false && imageUrl == null),
-        super(key: key);
-  final double size;
-  final String? imageUrl;
-  final bool useFaker;
-  final bool active;
-  final bool activeAWhileAgo;
+    required this.user,
+  }) : super(key: key);
+  late double size;
 
   @override
   Widget build(BuildContext context) {
@@ -38,9 +33,8 @@ class UserDp extends StatelessWidget {
               child: Stack(
                 alignment: Alignment.bottomCenter,
                 children: [
-                  Positioned.fill(
-                      child: AppFadeInImage(url: imageUrl ?? getFakeImage())),
-                  if (activeAWhileAgo)
+                  Positioned.fill(child: AppFadeInImage(url: user.imageUrl)),
+                  if (user.recentlyActive && !user.active)
                     Positioned(
                       left: 0,
                       right: 0,
@@ -53,8 +47,8 @@ class UserDp extends StatelessWidget {
                         alignment: Alignment.center,
                         child: FittedBox(
                             child: Text(
-                          "10 min",
-                          style: TextStyle(fontWeight: FontWeight.w500),
+                          "${user.lastActive.minute} min",
+                          style: const TextStyle(fontWeight: FontWeight.w500),
                         )),
                       ),
                     )
@@ -62,7 +56,7 @@ class UserDp extends StatelessWidget {
               ),
             ),
           ),
-          if (active && !activeAWhileAgo)
+          if (user.active)
             Container(
               height: indicatorSize,
               width: indicatorSize,

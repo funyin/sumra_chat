@@ -8,7 +8,8 @@ extension AppColors on Colors {
   static const seaBlue = Color(0xff2F71DF);
   static const yellow = Color(0xffFFD77A);
   static const white = Color(0xffFFFFFF);
-  static const offWhiteDark = Color(0xffD8D8D8);
+  static const neutralDark = Color(0xff19232C);
+  static const offBlack = Color(0xff959595);
   static const blue = Color(0xff377DFF);
   static const green = Color(0xff5AD439);
   static const greenLight = Color(0xffC7F0BB);
@@ -17,6 +18,7 @@ extension AppColors on Colors {
   static const grey2 = Color(0xffFAFBFC);
   static const grey3 = Color(0xff979797);
   static const grey4 = Color(0xff8A94A6);
+  static const grey6 = Color(0xffD8D8D8);
   static const textColor = Color(0xff323B4B);
   static const iconColorActive = textColor;
   static const iconColorInactive = Color(0xffB0B7C3);

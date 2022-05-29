@@ -2,12 +2,11 @@
 class Assets {
   Assets._();
 
+  static const String imagesChatBackground = 'assets/images/chat_background.png';
   static const String imagesLauncherIcon = 'assets/images/launcher_icon.png';
   static const String imagesLogo = 'assets/images/logo.png';
-  static const String imagesProfileBackground =
-      'assets/images/profile_background.png';
-  static const String imagesTransparentPlaceholder =
-      'assets/images/transparent_placeholder.png';
+  static const String imagesProfileBackground = 'assets/images/profile_background.png';
+  static const String imagesTransparentPlaceholder = 'assets/images/transparent_placeholder.png';
   static const String vectorsGame = 'assets/vectors/game.svg';
   static const String vectorsGif = 'assets/vectors/gif.svg';
   static const String vectorsHide = 'assets/vectors/hide.svg';
@@ -37,4 +36,5 @@ class Assets {
   static const String vectorsIcVideo = 'assets/vectors/ic_video.svg';
   static const String vectorsIcWave = 'assets/vectors/ic_wave.svg';
   static const String vectorsLogo = 'assets/vectors/logo.png';
+
 }

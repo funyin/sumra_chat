@@ -1,6 +1,7 @@
-class ChatModel {
+import 'package:equatable/equatable.dart';
+
+class ChatModel extends Equatable {
   final List<ChatMessageModel> messages;
-  final ChatType chatType;
   final ChatData chatData;
   final String chatId;
   String draft;
@@ -9,63 +10,97 @@ class ChatModel {
   ChatModel(
       {required this.messages,
       this.numOfNewMessage = 0,
-      required this.chatType,
       required this.chatData,
       required this.chatId,
-      this.draft = ""}) {}
+      this.draft = ""});
+
+  ChatModel copyWith({
+    List<ChatMessageModel>? messages,
+    ChatData? chatData,
+    String? chatId,
+    String? draft,
+    int? numOfNewMessage,
+  }) {
+    return ChatModel(
+      messages: messages ?? this.messages,
+      chatData: chatData ?? this.chatData,
+      chatId: chatId ?? this.chatId,
+      draft: draft ?? this.draft,
+      numOfNewMessage: numOfNewMessage ?? this.numOfNewMessage,
+    );
+  }
+
+  @override
+  List<Object> get props => [
+        [...messages],
+        chatData,
+        chatId
+      ];
 }
 
 class ChatMessageModel {
-  final UserModel? sender;
+  final UserModel sender;
   final String message;
   final ChatMessageType messageType;
-  final DateTime date;
+  final DateTime time;
+  final bool read;
 
   ChatMessageModel(
-      {this.sender,
+      {required this.sender,
       required this.message,
       this.messageType = ChatMessageType.text,
-      required this.date});
+      required this.time,
+      this.read = false});
 
-  String get id => message + date.toIso8601String();
+  String get id => message + time.toIso8601String();
+
+  ChatMessageModel copyWith({
+    UserModel? sender,
+    String? message,
+    ChatMessageType? messageType,
+    DateTime? time,
+    bool? read,
+  }) {
+    return ChatMessageModel(
+      sender: sender ?? this.sender,
+      message: message ?? this.message,
+      messageType: messageType ?? this.messageType,
+      time: time ?? this.time,
+      read: read ?? this.read,
+    );
+  }
 }
 
 class UserModel {
   final int id;
   final String name;
-  final String? imageUrl;
+  final String imageUrl;
   MessageSenderStatus status;
+  DateTime lastActive;
+  final bool hasStory;
 
   UserModel(
       {required this.id,
-      this.name = "No name",
-      this.imageUrl,
-      this.status = MessageSenderStatus.offline});
+      required this.name,
+      required this.imageUrl,
+      this.status = MessageSenderStatus.offline,
+      required this.lastActive,
+      required this.hasStory});
+
+  late bool recentlyActive =
+      DateTime.now().difference(lastActive).inMinutes <= 10;
+  late bool active = DateTime.now().difference(lastActive).inMinutes <= 1 ||
+      status == MessageSenderStatus.typing;
 }
 
 enum MessageSenderStatus { offline, online, typing }
 
-enum ChatType { public, private }
-
 class ChatData {
-  final String topic;
-  final String description;
-  final String? imageURl;
-  final List<UserModel>? admins;
-
-  ///for private chats the respondent is the first element while the signed in user is the second
+  ///The respondent is the first element while the signed in user is the second
   final List<UserModel> participants;
-  final DateTime created;
-  final noGroupDpSvg =
-      "https://firebasestorage.googleapis.com/v0/b/funyinkash-portfolio.appspot.com/o/portfolio%2FwhatsAppClone%2Fimages%2FnoGroupDpSvg.svg?alt=media&token=265c0ff0-4a77-4f3c-8884-82adfafd7226";
 
   ChatData({
-    required this.topic,
-    this.imageURl,
-    this.admins,
     required this.participants,
-    required this.description,
-    required this.created,
   });
 }
 
